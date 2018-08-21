@@ -13,7 +13,7 @@ class PlayingCard extends Component {
     return (
       <div className={"cardContainer "  + cardClass}>
         <ReactSVG
-            path={"../card/" + this.props.card.rank.symbol + this.props.card.suit.abbreviation + ".svg"}
+            path={"../card/" + this.props.card.rank.symbol + this.props.card.suit.abbreviation.toUpperCase() + ".svg"}
             alt={this.props.card.rank.symbol + this.props.card.suit.symbol}
             svgStyle={{ width: 100, height: 140 }}
             svgClassName={cardClass}
