@@ -1,0 +1,43 @@
+.handContainer {
+  display: inline-block;
+}
+
+.cardContainer {
+  float: left;
+  margin: 0px -30px 0px 0px;
+}
+
+.cardSelected {
+  margin: -10px -30px 0px 0px;
+}
+
+.cardSelected rect {
+  fill: rgba(155, 155, 155, .9);
+}
+
+.cardUnselected {
+  margin: 0px -30px 0px 0px;
+}
+
+.cardCell {
+  align: center;
+  text-align: center;
+  vertical-align: middle;
+  height: 200px;
+}
+
+.outsideCell {
+  width: 100px;
+}
+
+.nameContainer {
+  clear: both;
+}
+
+.resultsPanel {
+  margin: 30px;
+}
+
+.actionButton {
+  margin: 5px;
+}
