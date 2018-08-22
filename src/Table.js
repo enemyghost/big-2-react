@@ -190,6 +190,8 @@ class Table extends Component {
     let lastPlay = this.state.gameView.lastPlays.length > 0
       ? <PlayerHand
           cards={this.state.gameView.lastPlays[0].hand}
+          playerName={this.state.gameView.lastPlays[0].player.name}
+          played={true}
           onSelected={(e) => {} }/>
       : <div />;
 

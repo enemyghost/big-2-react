@@ -38,8 +38,21 @@
   margin: 30px;
 }
 
+.passButton {
+  margin: 5px 20px 5px 5px;
+  background-color: rgba(155,155,155,.9)
+}
+
+.playButton {
+  margin: 5px 5px 5px 20px;
+  background-color: rgba(0,155,0,.9)
+}
+
 .actionButton {
-  margin: 5px;
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 1.2em;
 }
 
 .active {
@@ -48,4 +61,13 @@
 
 .dealer {
   font-style: italic;
+}
+
+.playedHand {
+  font-style: italic;
+}
+
+.playerHand {
+  font-weight: bold;
+  padding: 160px 0px 20px 0px;
 }

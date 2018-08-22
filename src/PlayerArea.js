@@ -6,15 +6,14 @@ class PlayerArea extends Component {
   render() {
     let navBar = this.props.canPlay
       ? <div>
-          <button className="actionButton" onClick={(e) => this.props.onPlay(e)}>Play</button>
-          <button className="actionButton" onClick={(e) => this.props.onPass(e)}>Pass</button>
+          <button className="actionButton passButton" onClick={(e) => this.props.onPass(e)}>Pass</button>
+          <button className="actionButton playButton" onClick={(e) => this.props.onPlay(e)}>Play</button>
           <h4>It is your turn.</h4>
         </div>
       : <div />
     return (
       <div className="playerContainer">
-        <PlayerHand cards={this.props.handView.cards} onSelected={(card, e) => this.props.onSelected(card, e)}/>
-        <h4>{this.props.handView.player.name}</h4>
+        <PlayerHand cards={this.props.handView.cards} playerName={this.props.handView.player.name} onSelected={(card, e) => this.props.onSelected(card, e)}/>
         {navBar}
       </div>
     );

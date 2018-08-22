@@ -10,9 +10,13 @@ class PlayerHand extends Component {
         card={card}
         handleClick={(card, e) => this.props.onSelected(card, e)} />
     );
+    let playerClassName = this.props.played
+      ? "playedHand"
+      : "playerHand";
     return (
       <div className="handContainer">
         {listItems}
+        <div className={playerClassName}>{this.props.playerName}</div>
       </div>
     );
   }
