@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Table from './Table';
 import axios from 'axios';
+import hostname from './constants';
 
 class App extends Component {
   newGame(e) {
@@ -8,7 +9,7 @@ class App extends Component {
     axios.create({
           withCredentials: true
         })
-      .post("https://arcane-forest-67352.herokuapp.com/v1/games/")
+      .post(hostname +"/games/")
       .then(response => window.location.href ="/games/" + response.data)
   }
 

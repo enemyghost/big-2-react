@@ -41,3 +41,11 @@
 .actionButton {
   margin: 5px;
 }
+
+.active {
+  font-weight: bold
+}
+
+.dealer {
+  font-style: italic;
+}

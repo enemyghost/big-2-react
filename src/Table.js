@@ -5,6 +5,7 @@ import OpponentArea from './OpponentArea';
 import GameResults from './GameResults';
 import './playerArea.css';
 import axios from 'axios';
+import hostname from './constants';
 
 class Table extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .post("https://arcane-forest-67352.herokuapp.com/v1/games/" + this.props.gameId + "/plays", selectedCards)
+        .post(hostname +"/games/" + this.props.gameId + "/plays", selectedCards)
         .then(response => { this.updateGameState(response.data) });
     }
   }
@@ -65,7 +66,7 @@ class Table extends Component {
     axios.create({
         withCredentials: true
       })
-      .post("https://arcane-forest-67352.herokuapp.com/v1/games/" + this.props.gameId + "/plays", [])
+      .post(hostname +"/games/" + this.props.gameId + "/plays", [])
       .then(response => { this.updateGameState(response.data) });
   }
 
@@ -76,7 +77,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .post("https://arcane-forest-67352.herokuapp.com/v1/games/" + this.props.gameId + "/players")
+        .post(hostname +"/games/" + this.props.gameId + "/players")
         .then(response => { this.updateGameState(response.data) });
     }
   }
@@ -87,7 +88,7 @@ class Table extends Component {
     axios.create({
       withCredentials: true
     })
-    .post("https://arcane-forest-67352.herokuapp.com/v1/games/" + this.props.gameId + "/status/START")
+    .post(hostname +"/games/" + this.props.gameId + "/status/START")
     .then(response => { this.updateGameState(response.data) });
   }
 
@@ -96,7 +97,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .get("https://arcane-forest-67352.herokuapp.com/v1/games/" + this.props.gameId)
+        .get(hostname +"/games/" + this.props.gameId)
         .then(response => this.updateGameState(response.data));
     }
   }
@@ -159,43 +160,31 @@ class Table extends Component {
       return (<GameResults finalState={this.state.gameView} />);
     }
 
-    let indexMapThreePlayers = {
-      0: [1, 2],
-      1: [2, 0],
-      2: [0, 1]
-    }
-
-    let indexMapFourPlayers = {
-      0: [1, 2, 3],
-      1: [2, 3, 0],
-      2: [3, 0, 1],
-      3: [0, 1, 2]
-    }
-
     let currentPlayerId = this.state.gameView.gameViewOwner.id;
     let currentHand = this.currentPlayerHand(this.state.gameView);
-    let opponentHands = this.opponentHands(this.state.gameView);
+    let handViews = this.state.gameView.handViews;
+    handViews.sort((a, b) => a.position - b.position);
     let opponentOpposite = <div />;
     let opponentLeft = <div />;
     let opponentRight = <div />;
-    if (opponentHands.length === 1) {
-      opponentOpposite = <OpponentArea key={opponentHands[0].player.id} handView={opponentHands[0]} opponentNumber={1} />;
-    } else if (opponentHands.length === 2) {
-      let myHandIndex = this.state.gameView.handViews.indexOf(currentHand);
-      let indexOrder = indexMapThreePlayers[myHandIndex];
-      let handView0 = this.state.gameView.handViews[indexOrder[0]];
-      opponentLeft = <OpponentArea key={handView0.player.id} handView={handView0} opponentNumber={1} />;
-      let handView1 = this.state.gameView.handViews[indexOrder[1]];
-      opponentOpposite = <OpponentArea key={handView1.player.id} handView={handView1} opponentNumber={2} />;
-    } else if (opponentHands.length === 3) {
-      let myHandIndex = this.state.gameView.handViews.indexOf(currentHand);
-      let indexOrder = indexMapFourPlayers[myHandIndex];
-      let handView0 = this.state.gameView.handViews[indexOrder[0]];
-      opponentLeft = <OpponentArea key={handView0.player.id} handView={handView0} opponentNumber={1} />;
-      let handView1 = this.state.gameView.handViews[indexOrder[1]];
-      opponentOpposite = <OpponentArea key={handView1.player.id} handView={handView1} opponentNumber={2} />;
-      let handView2 = this.state.gameView.handViews[indexOrder[2]];
-      opponentRight = <OpponentArea key={handView2.player.id} handView={handView2} opponentNumber={3} />;
+    let myHand = (currentHand !== undefined)
+        ? <PlayerArea
+            handView={handViews[0]}
+            onSelected={(card, e) => this.toggleSelected(card, e)}
+            onPlay={(e) => this.onPlay(e)}
+            onPass={(e) => this.onPass(e)}
+            canPlay={this.state.gameView.gameState !== "COMPLETED" &&
+                  this.state.gameView.nextToPlay.id === currentPlayerId}
+          />
+        : <OpponentArea key={handViews[0].player.id} handView={handViews[0]} opponentNumber={0} />;
+    if (handViews.length === 2) {
+      opponentOpposite = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
+    } else if (handViews.length > 2) {
+      opponentLeft = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
+      opponentOpposite = <OpponentArea key={handViews[2].player.id} handView={handViews[2]} opponentNumber={2} />;
+      if (handViews.length === 4) {
+        opponentRight = <OpponentArea key={handViews[3].player.id} handView={handViews[3]} opponentNumber={3} />;
+      }
     }
 
     let lastPlay = this.state.gameView.lastPlays.length > 0
@@ -221,14 +210,7 @@ class Table extends Component {
             <tr>
               <td className="cardCell outsideCell"></td>
               <td className="cardCell">
-                <PlayerArea
-                  handView={currentHand}
-                  onSelected={(card, e) => this.toggleSelected(card, e)}
-                  onPlay={(e) => this.onPlay(e)}
-                  onPass={(e) => this.onPass(e)}
-                  canPlay={this.state.gameView.gameState !== "COMPLETED" &&
-                        this.state.gameView.nextToPlay.id === currentPlayerId}
-                />
+                {myHand}
               </td>
               <td className="cardCell outsideCell"></td>
             </tr>
