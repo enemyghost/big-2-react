@@ -1,5 +1,6 @@
 .handContainer {
   display: inline-block;
+  height: 162px;
 }
 
 .cardContainer {
@@ -13,6 +14,10 @@
 
 .cardSelected rect {
   fill: rgba(155, 155, 155, .9);
+}
+
+.lastWinnerHand rect {
+  fill: rgba(155, 155, 155, .5);
 }
 
 .cardUnselected {
@@ -39,12 +44,12 @@
 }
 
 .passButton {
-  margin: 5px 20px 5px 5px;
+  margin: 20px 20px 5px 0px;
   background-color: rgba(155,155,155,.9)
 }
 
 .playButton {
-  margin: 5px 5px 5px 20px;
+  margin: 20px 5px 5px 0px;
   background-color: rgba(0,155,0,.9)
 }
 
@@ -67,7 +72,34 @@
   font-style: italic;
 }
 
+.lastPlayed {
+  clear: both;
+  margin-left: 20px;
+}
+
+.myHand {
+  padding: 20px;
+}
+
 .playerHand {
   font-weight: bold;
   padding: 160px 0px 20px 0px;
+}
+
+.opponentHand {
+  float: left;
+  padding: 20px;
+  height: 162px;
+}
+
+.navigation {
+  /* margin-left: 20px */
+}
+
+.cardCount {
+  float: left;
+}
+
+.historyHeader {
+  font-weight: bold;
 }

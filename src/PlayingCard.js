@@ -9,7 +9,11 @@ class PlayingCard extends Component {
   }
 
   render() {
-    let cardClass = this.props.card.selected ? "cardSelected" : "cardUnselected";
+    let cardClass = this.props.card.selected
+      ? "cardSelected"
+      : this.props.card.winner
+        ? "lastWinnerHand"
+        : "cardUnselected";
     return (
       <div className={"cardContainer "  + cardClass}>
         <ReactSVG

@@ -9,7 +9,7 @@ class GameResults extends Component {
       let winner = handView.cards.length === 0;
       let hand = winner ? this.props.finalState.lastPlays[0].hand : handView.cards;
       if (winner) {
-        hand.forEach((card) => card.selected = true);
+        hand.forEach((card) => card.winner = true);
       }
       return (<div key={handView.player.name + idx}>
         <h1>{handView.player.name + (winner ? " wins." : "")}</h1>

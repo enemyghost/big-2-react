@@ -3,6 +3,7 @@ import PlayerArea from './PlayerArea';
 import PlayerHand from './PlayerHand';
 import OpponentArea from './OpponentArea';
 import GameResults from './GameResults';
+import HandHistory from './HandHistory';
 import './playerArea.css';
 import axios from 'axios';
 import hostname from './constants';
@@ -193,31 +194,18 @@ class Table extends Component {
           playerName={this.state.gameView.lastPlays[0].player.name}
           played={true}
           onSelected={(e) => {} }/>
-      : <div />;
+      : <div className="handContainer" />;
 
+    let handHistory = this.state.gameView.lastPlays.length > 0
+      ? <HandHistory lastHands={this.state.gameView.lastPlays} />
+      : <div />;
     return (
       <div className="tableContainer">
-        <table width="800px" height="600px">
-          <tbody>
-            <tr>
-              <td className="cardCell outsideCell"></td>
-              <td className="cardCell">{opponentOpposite}</td>
-              <td className="cardCell outsideCell"></td>
-            </tr>
-            <tr>
-              <td className="cardCell outsideCell">{opponentLeft}</td>
-              <td className="cardCell">{lastPlay}</td>
-              <td className="cardCell outsideCell">{opponentRight}</td>
-            </tr>
-            <tr>
-              <td className="cardCell outsideCell"></td>
-              <td className="cardCell">
-                {myHand}
-              </td>
-              <td className="cardCell outsideCell"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="opponentHand">{opponentLeft}</div>
+        <div className="opponentHand">{opponentOpposite}</div>
+        <div className="opponentHand">{opponentRight}</div>
+        <div className="lastPlayed">{lastPlay}</div>
+        <div className="myHand">{myHand}</div>
       </div>
     );
   }

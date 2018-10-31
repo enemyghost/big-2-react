@@ -16,7 +16,7 @@ class PlayerHand extends Component {
     return (
       <div className="handContainer">
         {listItems}
-        <div className={playerClassName}>{this.props.playerName}</div>
+        <div className={playerClassName}>{this.props.playerName}{this.props.canPlay ? ", it is your turn" : ""}</div>
       </div>
     );
   }
