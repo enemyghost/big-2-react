@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cardsJS": "^1.1.1",
+    "jwt-decode": "^2.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-playing-card": "^0.2.5",

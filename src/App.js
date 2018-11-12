@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import Table from './Table';
+import Login from './Login';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
-import hostname from './constants';
+import constants from './constants';
+import hasValidAuthToken from './HasValidAuthToken';
 
 class App extends Component {
   newGame(e) {
     e.preventDefault();
     axios.create({
-          withCredentials: true
+          withCredentials: true,
+          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
-      .post(hostname +"/games/")
+      .post(constants.hostname +"/games/")
       .then(response => window.location.href ="/games/" + response.data)
   }
 
   render() {
-    let pathParts = window.location.pathname.split("/");
-    let gameId = pathParts[pathParts.length - 1]
     return (
-      <div className="App">
-        {
-          gameId === "games"
-          ? <button className="actionButton" onClick={(e) => this.newGame(e)}>Create New Game</button>
-          : <Table gameId={gameId}/>
-        }
-      </div>
+      <Router>
+        <div>
+          <Route path="/login/" exact render={() => <Login newUser={false}/> } />
+          <Route path="/register/" exact render={() => <Login newUser={true}/> } />
+          <Route path="/games/" exact render={() =>
+              (<button className="actionButton" onClick={(e) => this.newGame(e)}>Create New Game</button>)} />
+          <Route path="/games/:gameId" exact render ={ (match) => <Table gameId={match.params.gameId} /> } />
+        </div>
+      </Router>
     );
   }
 }

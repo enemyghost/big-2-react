@@ -6,7 +6,7 @@ import GameResults from './GameResults';
 import HandHistory from './HandHistory';
 import './playerArea.css';
 import axios from 'axios';
-import hostname from './constants';
+import constants from './constants';
 
 class Table extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .post(hostname +"/games/" + this.props.gameId + "/plays", selectedCards)
+        .post(constants.hostname +"/games/" + this.props.gameId + "/plays", selectedCards)
         .then(response => { this.updateGameState(response.data) });
     }
   }
@@ -67,7 +67,7 @@ class Table extends Component {
     axios.create({
         withCredentials: true
       })
-      .post(hostname +"/games/" + this.props.gameId + "/plays", [])
+      .post(constants.hostname +"/games/" + this.props.gameId + "/plays", [])
       .then(response => { this.updateGameState(response.data) });
   }
 
@@ -78,7 +78,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .post(hostname +"/games/" + this.props.gameId + "/players")
+        .post(constants.hostname +"/games/" + this.props.gameId + "/players")
         .then(response => { this.updateGameState(response.data) });
     }
   }
@@ -89,7 +89,7 @@ class Table extends Component {
     axios.create({
       withCredentials: true
     })
-    .post(hostname +"/games/" + this.props.gameId + "/status/START")
+    .post(constants.hostname +"/games/" + this.props.gameId + "/status/START")
     .then(response => { this.updateGameState(response.data) });
   }
 
@@ -98,7 +98,7 @@ class Table extends Component {
       axios.create({
           withCredentials: true
         })
-        .get(hostname +"/games/" + this.props.gameId)
+        .get(constants.hostname +"/games/" + this.props.gameId)
         .then(response => this.updateGameState(response.data));
     }
   }
