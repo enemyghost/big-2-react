@@ -55,7 +55,8 @@ class Table extends Component {
     let selectedCards = handView.cards.filter((card) => card.selected);
     if (selectedCards.length > 0 && selectedCards.length <= 5) {
       axios.create({
-          withCredentials: true
+          withCredentials: true,
+          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
         .post(constants.hostname +"/games/" + this.props.gameId + "/plays", selectedCards)
         .then(response => { this.updateGameState(response.data) });
@@ -65,7 +66,8 @@ class Table extends Component {
   onPass(e) {
     e.preventDefault();
     axios.create({
-        withCredentials: true
+        withCredentials: true,
+        headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
       })
       .post(constants.hostname +"/games/" + this.props.gameId + "/plays", [])
       .then(response => { this.updateGameState(response.data) });
@@ -76,7 +78,8 @@ class Table extends Component {
 
     if (this.currentPlayerHand(this.state.gameView) === undefined) {
       axios.create({
-          withCredentials: true
+          withCredentials: true,
+          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
         .post(constants.hostname +"/games/" + this.props.gameId + "/players")
         .then(response => { this.updateGameState(response.data) });
@@ -87,7 +90,8 @@ class Table extends Component {
     e.preventDefault();
 
     axios.create({
-      withCredentials: true
+      withCredentials: true,
+      headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
     })
     .post(constants.hostname +"/games/" + this.props.gameId + "/status/START")
     .then(response => { this.updateGameState(response.data) });
@@ -96,7 +100,8 @@ class Table extends Component {
   fetchGameView() {
     if (!this.isGameOver(this.state.gameView) && !this.isMyTurn(this.state.gameView)) {
       axios.create({
-          withCredentials: true
+          withCredentials: true,
+          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
         .get(constants.hostname +"/games/" + this.props.gameId)
         .then(response => this.updateGameState(response.data));

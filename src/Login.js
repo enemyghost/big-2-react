@@ -1,151 +1,159 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import constants from './constants';
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import "./login.css";
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', displayName: '', password: '', confirmPassword: '', message: '' };
+    this.state = {
+      email: '',
+      displayName: '',
+      password: '',
+      confirmPassword: '',
+      message: '',
+      redirectToReferrer: false
+    };
+  }
 
-    this.emailChanged = this.emailChanged.bind(this);
-    this.displayNameChanged = this.displayNameChanged.bind(this);
-    this.passwordChanged = this.passwordChanged.bind(this);
-    this.passwordConfirmChanged = this.passwordConfirmChanged.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  validateForm() {
+    if (this.props.newUser) {
+      return this.state.password === this.state.confirmPassword
+        && this.state.password.length >= 6
+        && this.state.displayName.length >= 4
+        && this.validateEmail(this.state.email);
+    } else {
+      return this.state.password.length >= 6
+        && this.validateEmail(this.state.email);
+    }
   }
 
   validateEmail(email) {
     return (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email));
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
+    if (this.state.password.length < 6) {
+      this.setState({ message: "Password must be at least 6 chars" });
+      return;
+    } else if (!this.validateEmail(this.state.email)) {
+      this.setState({ message: "E-mail must be a valid e-mail address" });
+      return;
+    }
+
     if (this.props.newUser) {
       // validate and register
       if (this.state.password !== this.state.confirmPassword) {
         this.setState({ message: "Confirmation password does not match password." });
         return;
-      } else if (this.state.password.length < 6) {
-        this.setState({ message: "Password must be at least 6 chars" });
-        return;
       } else if (this.state.displayName.length < 4) {
         this.setState({ message: "Display Name must be at least 4 chars" });
         return;
-      } else if (!this.validateEmail(this.state.email)) {
-        this.setState({ message: "E-mail must be a valid e-mail address" });
-        return;
       }
 
-      axios.create({
-        allowCredentials: true
-      })
-      .post(constants.hostname + "/auth/register", {
-        userName: this.state.email,
-        password: this.state.password,
-        displayName: this.state.displayName
-      })
-      .then(response => {
-        alert(response.data.token);
-        window.localStorage.setItem(constants.TOKEN_LOCALSTORAGE_NAME, response.data.token);
-        window.location.href ="/games/";
-       })
-       .catch(error => {
-         this.setState({ message: "Failed to register new user, try again" });
-       });
+      this.login("/auth/register");
     } else {
-      // Login
-      axios.create({
-        withCredentials: true
-      })
-      .post(constants.hostname + "/auth/login", {
-        userName: this.state.email,
-        password: this.state.password
-      })
-      .then(response => {
-        window.localStorage.setItem(constants.TOKEN_LOCALSTORAGE_NAME, response.token);
-        window.location.href ="/games/";
-       })
-       .catch(error => {
-         this.setState({ message: "Failed to log in, try again" });
-       });
+      this.login("/auth/login");
     }
     this.setState({ message: "" });
   }
 
-  emailChanged(event) {
-    this.setState({ email: event.target.value });
+  login(path) {
+    axios.create({
+      withCredentials: true
+    })
+    .post(constants.hostname + path, {
+      userName: this.state.email,
+      password: this.state.password,
+      displayName: this.state.displayName
+    })
+    .then(response => {
+      window.localStorage.setItem(constants.TOKEN_LOCALSTORAGE_NAME, response.data.token);
+      this.setState({ redirectToReferrer: true });
+     })
+     .catch(error => {
+       this.setState({ message: "Failed to log in, try again" });
+     });
   }
 
-  displayNameChanged(event) {
-    this.setState({ displayName: event.target.value });
-  }
-
-  passwordChanged(event) {
-    this.setState({ password: event.target.value });
-  }
-
-  passwordConfirmChanged(event) {
-    this.setState({ confirmPassword: event.target.value });
+  handleChange = (event) => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
   }
 
   render() {
+    let { from } = this.props || { from: { pathname: "/games" } };
+    let { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer) return (<Redirect to={from} />);
+
     return (
-      <div>
-        <h2>{this.props.newUser ? "Register New User" : "Login"}</h2>
-        <form onSubmit={this.handleSubmit}>
-          <table>
-            <tbody>
-            <tr>
-              <td>
-                <label>E-mail Address</label>
-              </td>
-              <td>
-                <input type="text" value={this.state.email} onChange={this.emailChanged} />
-              </td>
-            </tr>
-            {
-              this.props.newUser
-                ? (<tr>
-                    <td>
-                      <label>Display Name</label>
-                    </td>
-                    <td>
-                      <input type="text" value={this.state.displayName} onChange={this.displayNameChanged} />
-                    </td>
-                  </tr>)
-                : <div />
-            }
-            <tr>
-              <td>
-                <label>Password</label>
-              </td>
-              <td>
-                <input type="password" value={this.state.password} onChange={this.passwordChanged} />
-              </td>
-            </tr>
-            {
-              this.props.newUser
-                ? (<tr>
-                    <td>
-                      <label>Confirm Password</label>
-                    </td>
-                    <td>
-                      <input type="password" value={this.state.confirmPassword} onChange={this.passwordConfirmChanged} />
-                    </td>
-                  </tr>)
-                : <div />
-            }
-            <tr>
-              <td colSpan="2">
-                <input type="submit" value="Submit" />
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </form>
-        <div>
-          {this.state.message}
+      <div className="Login">
+        <div className="text-center">
+          <h2>{this.props.newUser ? "Register" : "Login"}</h2>
+          {
+            !this.props.newUser
+            ? <div><Link to={{pathname: "/register", state: { from: from }}} className="small">Register</Link></div>
+            : <div><Link to="/login" className="small">Already registered?</Link></div>
+          }
         </div>
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="email" bsSize="large">
+            <ControlLabel>Email</ControlLabel>
+            <FormControl
+              autoFocus
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          {
+            this.props.newUser
+            ? (
+              <FormGroup controlId="displayName" bsSize="large">
+                <ControlLabel>Display Name</ControlLabel>
+                <FormControl
+                  type="text"
+                  value={this.state.displayName}
+                  onChange={this.handleChange}
+                />
+              </FormGroup>)
+            : <div />
+          }
+          <FormGroup controlId="password" bsSize="large">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              value={this.state.password}
+              onChange={this.handleChange}
+              type="password"
+            />
+          </FormGroup>
+          {
+            this.props.newUser
+            ? (
+              <FormGroup controlId="confirmPassword" bsSize="large">
+                <ControlLabel>Confirm Password</ControlLabel>
+                <FormControl
+                  value={this.state.confirmPassword}
+                  onChange={this.handleChange}
+                  type="password"
+                />
+              </FormGroup>)
+            : <div />
+          }
+          <Button
+            block
+            bsSize="large"
+            disabled={!this.validateForm()}
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
       </div>
     );
   }

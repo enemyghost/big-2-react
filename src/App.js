@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Table from './Table';
 import Login from './Login';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import axios from 'axios';
 import constants from './constants';
 import hasValidAuthToken from './HasValidAuthToken';
@@ -21,15 +21,30 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route path="/login/" exact render={() => <Login newUser={false}/> } />
-          <Route path="/register/" exact render={() => <Login newUser={true}/> } />
-          <Route path="/games/" exact render={() =>
+          <Route path="/login/" exact render={(m) => <Login newUser={false} from={m.location.state.from}/> } />
+          <Route path="/register/" exact render={(m) => <Login newUser={true} from={m.location.state.from}/> } />
+          <PrivateRoute path="/games/" exact render={() =>
               (<button className="actionButton" onClick={(e) => this.newGame(e)}>Create New Game</button>)} />
-          <Route path="/games/:gameId" exact render ={ (match) => <Table gameId={match.params.gameId} /> } />
+          <PrivateRoute path="/games/:gameId" exact render={ props =>(<Table gameId={props.match.params.gameId}/>) } />
         </div>
       </Router>
     );
   }
-}
+};
+
+const PrivateRoute = ({ render: renderFunc, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render = {
+        hasValidAuthToken()
+              ? renderFunc
+              : (props) => {
+                  return (<Redirect to={{ pathname: '/login', state: { from: props.location } }} />);
+              }
+      }
+    />
+  )
+};
 
 export default App;

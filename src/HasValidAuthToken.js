@@ -20,6 +20,8 @@ export default () => {
     if (Object.keys(decoded).includes(constants.TOKEN_EXPIRATION_KEY)) {
       // if token date is less than or equal to current date, the token is expired
       return decoded[constants.TOKEN_EXPIRATION_KEY] > (new Date()).getTime();
+    } else {
+
     }
     return true;
   } catch (e) {

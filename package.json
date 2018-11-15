@@ -7,6 +7,7 @@
     "cardsJS": "^1.1.1",
     "jwt-decode": "^2.2.0",
     "react": "^16.4.2",
+    "react-bootstrap": "^0.32.4",
     "react-dom": "^16.4.2",
     "react-playing-card": "^0.2.5",
     "react-playing-cards": "^0.4.0",
