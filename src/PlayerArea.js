@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Grid, Row, Col } from "react-bootstrap";
 import PlayerHand from './PlayerHand';
 import './playerArea.css';
 
@@ -11,14 +12,20 @@ class PlayerArea extends Component {
         </div>
       : <div />
     return (
-      <div className="playerContainer">
-        <PlayerHand
-            cards={this.props.handView.cards}
-            playerName={this.props.handView.player.name}
-            canPlay={this.props.canPlay}
-            onSelected={(card, e) => this.props.onSelected(card, e)}/>
-        {navBar}
-      </div>
+      <Grid>
+        <Row>
+          <Col>
+            <PlayerHand
+                cards={this.props.handView.cards}
+                playerName={this.props.handView.player.name}
+                canPlay={this.props.canPlay}
+                onSelected={(card, e) => this.props.onSelected(card, e)}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>{navBar}</Col>
+        </Row>
+      </Grid>
     );
   }
 }

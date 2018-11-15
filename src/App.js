@@ -21,8 +21,8 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route path="/login/" exact render={(m) => <Login newUser={false} from={m.location.state.from}/> } />
-          <Route path="/register/" exact render={(m) => <Login newUser={true} from={m.location.state.from}/> } />
+          <Route path="/login/" exact render={(m) => <Login newUser={false} from={m.location.state === undefined ? undefined : m.location.state.from}/> } />
+          <Route path="/register/" exact render={(m) => <Login newUser={true} from={m.location.state === undefined ? undefined : m.location.state.from}/> } />
           <PrivateRoute path="/games/" exact render={() =>
               (<button className="actionButton" onClick={(e) => this.newGame(e)}>Create New Game</button>)} />
           <PrivateRoute path="/games/:gameId" exact render={ props =>(<Table gameId={props.match.params.gameId}/>) } />

@@ -24,21 +24,6 @@
   margin: 0px -30px 0px 0px;
 }
 
-.cardCell {
-  align: center;
-  text-align: center;
-  vertical-align: middle;
-  height: 200px;
-}
-
-.outsideCell {
-  width: 100px;
-}
-
-.nameContainer {
-  clear: both;
-}
-
 .resultsPanel {
   margin: 30px;
 }
@@ -83,12 +68,10 @@
 
 .playerHand {
   font-weight: bold;
-  padding: 160px 0px 20px 0px;
 }
 
 .opponentHand {
-  float: left;
-  padding: 20px;
+  padding: 10px;
   height: 162px;
 }
 
@@ -97,9 +80,14 @@
 }
 
 .cardCount {
-  float: left;
+  font-size:0.75em;
+  padding-left: 5px;
 }
 
 .historyHeader {
   font-weight: bold;
+}
+
+.gridCell {
+  padding: 10px;
 }

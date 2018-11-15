@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Grid, Row, Col } from "react-bootstrap";
 import PlayerArea from './PlayerArea';
 import PlayerHand from './PlayerHand';
 import OpponentArea from './OpponentArea';
@@ -183,16 +184,14 @@ class Table extends Component {
                   this.state.gameView.nextToPlay.id === currentPlayerId}
           />
         : <OpponentArea key={handViews[0].player.id} handView={handViews[0]} opponentNumber={0} />;
-    if (handViews.length === 2) {
-      opponentOpposite = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
-    } else if (handViews.length > 2) {
-      opponentLeft = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
+    opponentLeft = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
+    if (handViews.length > 2) {
       opponentOpposite = <OpponentArea key={handViews[2].player.id} handView={handViews[2]} opponentNumber={2} />;
-      if (handViews.length === 4) {
-        opponentRight = <OpponentArea key={handViews[3].player.id} handView={handViews[3]} opponentNumber={3} />;
-      }
     }
-
+    if (handViews.length > 3) {
+      opponentRight = <OpponentArea key={handViews[3].player.id} handView={handViews[3]} opponentNumber={3} />;
+    }
+    
     let lastPlay = this.state.gameView.lastPlays.length > 0
       ? <PlayerHand
           cards={this.state.gameView.lastPlays[0].hand}
@@ -205,13 +204,19 @@ class Table extends Component {
       ? <HandHistory lastHands={this.state.gameView.lastPlays} />
       : <div />;
     return (
-      <div className="tableContainer">
-        <div className="opponentHand">{opponentLeft}</div>
-        <div className="opponentHand">{opponentOpposite}</div>
-        <div className="opponentHand">{opponentRight}</div>
-        <div className="lastPlayed">{lastPlay}</div>
-        <div className="myHand">{myHand}</div>
-      </div>
+      <Grid>
+        <Row>
+          <Col xs={2} className="gridCell">{opponentLeft}</Col>
+          <Col xs={2} className="gridCell">{opponentOpposite}</Col>
+          <Col xs={2} className="gridCell">{opponentRight}</Col>
+        </Row>
+        <Row>
+          <Col xsOffset={2} className="gridCell">{lastPlay}</Col>
+        </Row>
+        <Row>
+          <Col className="gridCell">{myHand}</Col>
+        </Row>
+      </Grid>
     );
   }
 }

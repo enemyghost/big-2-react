@@ -23,6 +23,7 @@ class Login extends Component {
       return this.state.password === this.state.confirmPassword
         && this.state.password.length >= 6
         && this.state.displayName.length >= 4
+        && this.state.displayName.length <= 20
         && this.validateEmail(this.state.email);
     } else {
       return this.state.password.length >= 6
@@ -49,8 +50,8 @@ class Login extends Component {
       if (this.state.password !== this.state.confirmPassword) {
         this.setState({ message: "Confirmation password does not match password." });
         return;
-      } else if (this.state.displayName.length < 4) {
-        this.setState({ message: "Display Name must be at least 4 chars" });
+      } else if (this.state.displayName.length < 4 || this.state.displayName.length > 10) {
+        this.setState({ message: "Display Name must be 4-20 chars" });
         return;
       }
 

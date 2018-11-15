@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Grid, Row, Col } from "react-bootstrap";
 import PlayingCard from './PlayingCard';
 import './playerArea.css';
 
@@ -14,10 +15,16 @@ class PlayerHand extends Component {
       ? "playedHand"
       : "playerHand";
     return (
-      <div className="handContainer">
-        {listItems}
-        <div className={playerClassName}>{this.props.playerName}{this.props.canPlay ? ", it is your turn" : ""}</div>
-      </div>
+      <Grid>
+        <Row>
+          <Col>
+            {listItems}
+          </Col>
+        </Row>
+        <Row>
+          <Col className={playerClassName}>{this.props.playerName}{this.props.canPlay ? ", it is your turn" : ""}</Col>
+        </Row>
+      </Grid>
     );
   }
 }
