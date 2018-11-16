@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import constants from './constants';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { BrowserRouter as Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Link, Redirect } from "react-router-dom";
 import "./login.css";
 
 class Login extends Component {
@@ -97,9 +97,9 @@ class Login extends Component {
         <div className="text-center">
           <h2>{this.props.newUser ? "Register" : "Login"}</h2>
           {
-            !this.props.newUser
-            ? <div><Link to={{pathname: "/register", state: { from: from }}} className="small">Register</Link></div>
-            : <div><Link to="/login" className="small">Already registered?</Link></div>
+            (!this.props.newUser)
+            ? (<Link to={{pathname: "/register", state: { from: from }}} className="small">Register</Link>)
+            : (<Link to="/login" className="small">Already registered?</Link>)
           }
         </div>
         <form onSubmit={this.handleSubmit} className="loginForm">

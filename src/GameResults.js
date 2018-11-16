@@ -38,7 +38,7 @@ class GameResults extends Component {
         this.start = setInterval(this.startTimer, 1000);
       } else if (this.state.timer === 0) {
         clearInterval(this.decrement);
-        return <Redirect to={"/games/" + this.props.finalState.nextGameId} />
+        return (<Redirect to={"/games/" + this.props.finalState.nextGameId} />);
       }
     }
 
