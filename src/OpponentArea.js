@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col } from "react-bootstrap";
 import ReactSVG from 'react-svg';
 import './playerArea.css';
 
 class OpponentArea extends Component {
   render() {
-    let opponentClassName = " opponent" + this.props.opponentNumber;
     let activeClassName = this.props.handView.nextToPlay ? " active" : "";
     let playerName = this.props.handView.player.name.length > 10
         ? this.props.handView.player.name.substring(0, 10) + "..."

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import constants from './constants';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Link, Redirect } from "react-router-dom";
 import "./login.css";
 
 class Login extends Component {
@@ -102,7 +102,7 @@ class Login extends Component {
             : <div><Link to="/login" className="small">Already registered?</Link></div>
           }
         </div>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} className="loginForm">
           <FormGroup controlId="email" bsSize="large">
             <ControlLabel>Email</ControlLabel>
             <FormControl

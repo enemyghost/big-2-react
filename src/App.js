@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Table from './Table';
 import Login from './Login';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import axios from 'axios';
 import constants from './constants';
 import hasValidAuthToken from './HasValidAuthToken';

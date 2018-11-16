@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col } from "react-bootstrap";
 import PlayerArea from './PlayerArea';
 import PlayerHand from './PlayerHand';
 import OpponentArea from './OpponentArea';
 import GameResults from './GameResults';
-import HandHistory from './HandHistory';
 import './playerArea.css';
 import axios from 'axios';
 import constants from './constants';
@@ -14,6 +13,8 @@ class Table extends Component {
     super(props);
     this.state = {
       gameView: {
+        id: '',
+        nextGameId: null,
         gameState: "WAITING_FOR_PLAYERS",
         gameViewOwner: { },
         handViews: [ ],
@@ -99,28 +100,31 @@ class Table extends Component {
   }
 
   fetchGameView() {
-    if (!this.isGameOver(this.state.gameView) && !this.isMyTurn(this.state.gameView)) {
-      axios.create({
-          withCredentials: true,
-          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
-        })
-        .get(constants.hostname +"/games/" + this.props.gameId)
-        .then(response => this.updateGameState(response.data));
-    }
+    axios.create({
+        withCredentials: true,
+        headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
+      })
+      .get(constants.hostname +"/games/" + this.props.gameId)
+      .then(response => this.updateGameState(response.data));
   }
 
   updateGameState(newState) {
     let gameView = newState;
     let handView = this.currentPlayerHand(gameView);
     let previouslySelected = this.state.selectedCards;
-    if (handView !== undefined) {
+    let newlySelected = [];
+    if (handView !== undefined && this.state.gameView.id === gameView.id) {
       handView.cards.forEach(card => {
         if (previouslySelected.find(c => c.rank.rank === card.rank.rank && c.suit.symbol === card.suit.symbol) !== undefined) {
           card.selected = true;
+          newlySelected.push(card);
         }
       })
     }
-    this.setState({ gameView: gameView });
+    this.setState({
+      gameView: gameView,
+      selectedCards: newlySelected
+    });
   }
 
   componentDidMount() {
@@ -191,7 +195,7 @@ class Table extends Component {
     if (handViews.length > 3) {
       opponentRight = <OpponentArea key={handViews[3].player.id} handView={handViews[3]} opponentNumber={3} />;
     }
-    
+
     let lastPlay = this.state.gameView.lastPlays.length > 0
       ? <PlayerHand
           cards={this.state.gameView.lastPlays[0].hand}
@@ -200,9 +204,9 @@ class Table extends Component {
           onSelected={(e) => {} }/>
       : <div className="handContainer" />;
 
-    let handHistory = this.state.gameView.lastPlays.length > 0
-      ? <HandHistory lastHands={this.state.gameView.lastPlays} />
-      : <div />;
+    // let handHistory = this.state.gameView.lastPlays.length > 0
+    //   ? <HandHistory lastHands={this.state.gameView.lastPlays} />
+    //   : <div />;
     return (
       <Grid>
         <Row>
