@@ -53,8 +53,9 @@ class GameResults extends Component {
       let newGameMessage = this.state.timer !== -1
           ? "New game starting in " + this.state.timer + " seconds."
           : "";
+      let score = this.props.finalState.scores[handView.player.id];
       return (<div key={handView.player.name + idx}>
-        <h1>{handView.player.name + (winner ? " wins. " + newGameMessage : "")}{
+        <h1>{handView.player.name + (winner ? " wins +" + score + ". " + newGameMessage : " " + score)}{
           (winner
             && handView.player.id === this.props.finalState.gameViewOwner.id
             && this.state.timer === -1)

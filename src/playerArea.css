@@ -16,8 +16,12 @@
   fill: rgba(155, 155, 155, .9);
 }
 
+.lastWinnerHand {
+  margin: 0px -30px 0px 0px;
+}
+
 .lastWinnerHand rect {
-  fill: rgba(155, 155, 155, .5);
+  fill: rgba(155, 155, 155, .9);
 }
 
 .cardUnselected {
