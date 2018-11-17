@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Table from './Table';
 import Login from './Login';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import Leaderboard from './Leaderboard';
 import axios from 'axios';
 import constants from './constants';
 import hasValidAuthToken from './HasValidAuthToken';
@@ -26,6 +27,7 @@ class App extends Component {
           <PrivateRoute path="/games/" exact render={() =>
               (<button className="actionButton" onClick={(e) => this.newGame(e)}>Create New Game</button>)} />
           <PrivateRoute path="/games/:gameId" exact render={ props =>(<Table gameId={props.match.params.gameId}/>) } />
+          <PrivateRoute path="/leaderboard" exact render={ props => (<Leaderboard />)} />
         </div>
       </Router>
     );

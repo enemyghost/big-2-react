@@ -103,3 +103,8 @@
 .loginForm {
   margin: 20px;
 }
+
+.leaderboardTable {
+  width: 50%;
+  margin: 0 auto;
+}
