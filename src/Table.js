@@ -7,6 +7,8 @@ import GameResults from './GameResults';
 import './playerArea.css';
 import axios from 'axios';
 import constants from './constants';
+import SockJsClient from 'react-stomp';
+import { Redirect } from "react-router-dom";
 
 class Table extends Component {
   constructor(props) {
@@ -20,7 +22,8 @@ class Table extends Component {
         handViews: [ ],
         lastPlays: [ ]
       },
-      selectedCards: []
+      selectedCards: [],
+      timer: -1
     }
     this.fetchGameView = this.fetchGameView.bind(this);
     this.currentPlayerHand = this.currentPlayerHand.bind(this);
@@ -61,7 +64,10 @@ class Table extends Component {
           headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
         .post(constants.hostname +"/games/" + this.props.gameId + "/plays", selectedCards)
-        .then(response => { this.updateGameState(response.data) });
+        .then(response => {
+          this.sendUpdate();
+          this.updateGameState(response.data);
+        });
     }
   }
 
@@ -72,7 +78,10 @@ class Table extends Component {
         headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
       })
       .post(constants.hostname +"/games/" + this.props.gameId + "/plays", [])
-      .then(response => { this.updateGameState(response.data) });
+      .then(response => {
+        this.sendUpdate();
+        this.updateGameState(response.data);
+      });
   }
 
   joinGame(e) {
@@ -84,7 +93,10 @@ class Table extends Component {
           headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
         .post(constants.hostname +"/games/" + this.props.gameId + "/players")
-        .then(response => { this.updateGameState(response.data) });
+        .then(response => {
+          this.sendUpdate();
+          this.updateGameState(response.data);
+        });
     }
   }
 
@@ -96,15 +108,33 @@ class Table extends Component {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
     })
     .post(constants.hostname +"/games/" + this.props.gameId + "/status/START")
-    .then(response => { this.updateGameState(response.data) });
+    .then(response => {
+      this.sendUpdate();
+      this.updateGameState(response.data);
+    });
   }
 
-  fetchGameView() {
+  startNewGame = (event) => {
+    event.preventDefault();
     axios.create({
         withCredentials: true,
         headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
       })
-      .get(constants.hostname +"/games/" + this.props.gameId)
+      .post(constants.hostname +"/games/" + this.props.gameId + "/newGame")
+      .then(response => {
+        this.sendUpdate();
+      });;
+  }
+
+  fetchGameView(gameId) {
+    if (gameId === undefined) {
+      gameId = this.props.gameId;
+    }
+    axios.create({
+        withCredentials: true,
+        headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
+      })
+      .get(constants.hostname +"/games/" + gameId)
       .then(response => this.updateGameState(response.data));
   }
 
@@ -113,23 +143,36 @@ class Table extends Component {
     let handView = this.currentPlayerHand(gameView);
     let previouslySelected = this.state.selectedCards;
     let newlySelected = [];
-    if (handView !== undefined && this.state.gameView.id === gameView.id) {
-      handView.cards.forEach(card => {
-        if (previouslySelected.find(c => c.rank.rank === card.rank.rank && c.suit.symbol === card.suit.symbol) !== undefined) {
-          card.selected = true;
-          newlySelected.push(card);
-        }
-      })
+    if (this.props.gameId === gameView.gameId) {
+      if (handView !== undefined) {
+        handView.cards.forEach(card => {
+          if (previouslySelected.find(c => c.rank.rank === card.rank.rank && c.suit.symbol === card.suit.symbol) !== undefined) {
+            card.selected = true;
+            newlySelected.push(card);
+          }
+        })
+      }
+      this.setState({
+        gameView: gameView,
+        selectedCards: newlySelected
+      });
     }
-    this.setState({
-      gameView: gameView,
-      selectedCards: newlySelected
-    });
+  }
+
+  sendUpdate = (msg) => {
+    if (this.clientRef !== undefined && this.clientRef.state.connected) {
+      this.clientRef.sendMessage('/topics/games/' + this.props.gameId, msg);
+    }
   }
 
   componentDidMount() {
     this.fetchGameView();
-    setInterval(this.fetchGameView, 2500);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.gameId !== this.props.gameId) {
+      this.fetchGameView(nextProps.gameId);
+    }
   }
 
   currentPlayerHand(gameView) {
@@ -150,25 +193,65 @@ class Table extends Component {
     return gameView.gameState === "COMPLETED";
   }
 
+  startTimer = () => {
+    clearInterval(this.start);
+    this.decrement = setInterval(this.decrementTimer, 1000);
+    this.setState({ timer: 10 })
+  }
+
+  decrementTimer = () => {
+    let newValue = this.state.timer - 1;
+    if (newValue >= 0) {
+      this.setState({ timer: newValue });
+    } else {
+      clearInterval(this.decrement);
+      this.setState({ timer: -1})
+    }
+  }
+
   render() {
+    if (this.state.gameView.nextGameId !== null) {
+      if (this.state.timer === 0 && this.state.gameView.nextGameId !== this.props.gameId) {
+        return (<Redirect to={"/games/" + this.state.gameView.nextGameId} />);
+      } else if (this.state.timer === -1) {
+        this.start = setInterval(this.startTimer, 1000);
+      }
+    }
+
+    let socks = this.state.gameView.nextGameId === null
+      ? <SockJsClient
+          url={constants.hostname + "/games/push/" + this.props.gameId}
+          headers={{ 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }}
+          topics={['/topics/games/' + this.props.gameId]}
+          onMessage={ (msg) => { this.fetchGameView() }}
+          debug={true}
+          ref={ (client) => { this.clientRef = client }} />
+      : <div />;
     if (this.state.gameView.gameState === "WAITING_FOR_PLAYERS") {
       if (this.currentPlayerHand(this.state.gameView) === undefined) {
-        return (<button onClick={(e) => this.joinGame(e)}>Join Game</button>);
+        return (<div>
+              <button onClick={(e) => this.joinGame(e)}>Join Game</button>
+          </div>);
       } else if (this.state.gameView.handViews.length >= 2) {
         return (
           <div>
+            {socks}
             <div>{this.state.gameView.handViews.length + " players in the game. Waiting for players to join..."}</div>
             <button onClick={(e) => this.startGame(e)}>Start Game</button>
           </div>);
       } else {
         return (
           <div>
+            {socks}
             <div>{"You're the only one here. Waiting for players to join, share the link with your friends."}</div>
           </div>
         );
       }
     } else if (this.isGameOver(this.state.gameView)) {
-      return (<GameResults finalState={this.state.gameView} />);
+      return (<div>
+            {socks}
+            <GameResults finalState={this.state.gameView} startNewGame={this.startNewGame} timer={this.state.timer}/>
+          </div>);
     }
 
     let currentPlayerId = this.state.gameView.gameViewOwner.id;
@@ -203,12 +286,14 @@ class Table extends Component {
           played={true}
           onSelected={(e) => {} }/>
       : <div className="handContainer" />;
-
     // let handHistory = this.state.gameView.lastPlays.length > 0
     //   ? <HandHistory lastHands={this.state.gameView.lastPlays} />
     //   : <div />;
     return (
       <Grid>
+        <Row>
+          {socks}
+        </Row>
         <Row>
           <Col xs={2} className="gridCell">{opponentLeft}</Col>
           <Col xs={2} className="gridCell">{opponentOpposite}</Col>

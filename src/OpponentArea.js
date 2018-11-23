@@ -16,7 +16,7 @@ class OpponentArea extends Component {
           <Col><ReactSVG path="../card/back.svg" svgStyle={{ width: 100, height: 140 }}/></Col>
         </Row>
         <Row>
-          <Col xsAuto>
+          <Col>
               <div className={"cardCount" + activeClassName}>
                   {playerName} ({this.props.handView.cardCount}) {this.props.handView.nextToPlay ? "🤔" : ""}</div>
           </Col>
