@@ -5,6 +5,7 @@ import PlayerHand from './PlayerHand';
 import OpponentArea from './OpponentArea';
 import GameResults from './GameResults';
 import HandHistory from './HandHistory';
+import Lobby from './Lobby';
 import './playerArea.css';
 import axios from 'axios';
 import constants from './constants';
@@ -229,26 +230,9 @@ class Table extends Component {
           ref={ (client) => { this.clientRef = client }} />
       : <div />;
     if (this.state.gameView.gameState === "WAITING_FOR_PLAYERS") {
-      if (this.currentPlayerHand(this.state.gameView) === undefined) {
-        return (<div>
-              {socks}
-              <button className="createGameButton" onClick={(e) => this.joinGame(e)}>Join Game</button>
-          </div>);
-      } else if (this.state.gameView.handViews.length >= 2) {
-        return (
-          <div>
-            {socks}
-            <div>{this.state.gameView.handViews.length + " players in the game. Waiting for players to join..."}</div>
-            <button onClick={(e) => this.startGame(e)}>Start Game</button>
-          </div>);
-      } else {
-        return (
-          <div>
-            {socks}
-            <div>{"You're the only one here. Waiting for players to join, share the link with your friends."}</div>
-          </div>
-        );
-      }
+      return (<div>{socks}<Lobby gameView={this.state.gameView}
+            joinGame={(e) => this.joinGame(e)}
+            startGame={(e) => this.startGame(e)} /></div>);
     } else if (this.isGameOver(this.state.gameView)) {
       return (<div>
             {socks}

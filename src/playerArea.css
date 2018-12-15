@@ -154,3 +154,22 @@
   width: 50%;
   margin: 0 auto;
 }
+
+.lobbyTable {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.lobbyContent {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.lobbyButton {
+  width: 250px;
+  height: 50px;
+  margin-top: 10px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  background: #CCCCCC;
+}
