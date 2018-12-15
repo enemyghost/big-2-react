@@ -247,6 +247,7 @@ class Table extends Component {
     let opponentOpposite = <div />;
     let opponentLeft = <div />;
     let opponentRight = <div />;
+
     let myHand = (currentHand !== undefined)
         ? <PlayerArea
             handView={handViews[0]}
@@ -257,8 +258,7 @@ class Table extends Component {
                   this.state.gameView.nextToPlay.id === currentPlayerId}
             canPass={this.state.gameView.gameState !== "COMPLETED" &&
                   this.state.gameView.nextToPlay.id === currentPlayerId &&
-                  this.state.gameView.lastPlays.length > 0 &&
-                  this.state.gameView.lastPlays[0].hand.length > 0}
+                  this.state.gameView.lastPlays.length > 0}
           />
         : <OpponentArea key={handViews[0].player.id} handView={handViews[0]} opponentNumber={0} />;
     opponentLeft = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
