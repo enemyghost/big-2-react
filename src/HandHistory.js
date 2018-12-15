@@ -3,17 +3,29 @@ import './playerArea.css';
 
 class HandHistory extends Component {
   render() {
-    let handHistory = this.props.lastHands.map(play =>
-        <tr>
-          <td>{play.player.name}</td>
-          <td>{play.hand.map(card => card.rank.symbol + card.suit.symbol).join(" ")}</td>
-        </tr>
+    let handHistory = this.props.lastPlays.map(play =>
+      (<tr>
+        <td className="historyPlayer">
+          {play.player.name}
+        </td>
+        <td className="historyPlay">
+          {
+            (play.hand.length === 0)
+              ? "pass"
+              : play.hand.map(card => card.rank.symbol + card.suit.symbol).join(" ")
+          }
+        </td>
+        </tr>)
     );
     return (
-      <table>
-        <tr className="historyHeader">Recent Plays</tr>
-        {handHistory}
-      </table>
+      <div className="historyParent">
+        <div className="historyHeader">Hand History</div>
+        <table className="historyArea">
+          <tbody>
+            {handHistory}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from "react-bootstrap";
 import PlayerHand from './PlayerHand';
 import './playerArea.css';
 
@@ -7,25 +6,25 @@ class PlayerArea extends Component {
   render() {
     let navBar = this.props.canPlay
       ? <div className="navigation">
-          <button className="actionButton passButton" onClick={(e) => this.props.onPass(e)}>Pass</button>
-          <button className="actionButton playButton" onClick={(e) => this.props.onPlay(e)}>Play</button>
+          {
+            this.props.canPass
+              ? <button className="actionButton passButton" onClick={(e) => this.props.onPass(e)}>Pass</button>
+              : <button className="actionButton passButton" disabled onClick={(e) => this.props.onPass(e)}>Pass</button>
+          }
+             <button className="actionButton playButton" onClick={(e) => this.props.onPlay(e)}>Play</button>
         </div>
-      : <div />
+      : <div className="navigation" />
     return (
-      <Grid>
-        <Row>
-          <Col>
+      <div>
+        <div>
             <PlayerHand
                 cards={this.props.handView.cards}
                 playerName={this.props.handView.player.name}
                 canPlay={this.props.canPlay}
                 onSelected={(card, e) => this.props.onSelected(card, e)}/>
-          </Col>
-        </Row>
-        <Row>
-          <Col>{navBar}</Col>
-        </Row>
-      </Grid>
+        </div>
+        {navBar}
+      </div>
     );
   }
 }

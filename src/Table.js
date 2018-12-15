@@ -4,6 +4,7 @@ import PlayerArea from './PlayerArea';
 import PlayerHand from './PlayerHand';
 import OpponentArea from './OpponentArea';
 import GameResults from './GameResults';
+import HandHistory from './HandHistory';
 import './playerArea.css';
 import axios from 'axios';
 import constants from './constants';
@@ -230,7 +231,8 @@ class Table extends Component {
     if (this.state.gameView.gameState === "WAITING_FOR_PLAYERS") {
       if (this.currentPlayerHand(this.state.gameView) === undefined) {
         return (<div>
-              <button onClick={(e) => this.joinGame(e)}>Join Game</button>
+              {socks}
+              <button className="createGameButton" onClick={(e) => this.joinGame(e)}>Join Game</button>
           </div>);
       } else if (this.state.gameView.handViews.length >= 2) {
         return (
@@ -269,6 +271,10 @@ class Table extends Component {
             onPass={(e) => this.onPass(e)}
             canPlay={this.state.gameView.gameState !== "COMPLETED" &&
                   this.state.gameView.nextToPlay.id === currentPlayerId}
+            canPass={this.state.gameView.gameState !== "COMPLETED" &&
+                  this.state.gameView.nextToPlay.id === currentPlayerId &&
+                  this.state.gameView.lastPlays.length > 0 &&
+                  this.state.gameView.lastPlays[0].hand.length > 0}
           />
         : <OpponentArea key={handViews[0].player.id} handView={handViews[0]} opponentNumber={0} />;
     opponentLeft = <OpponentArea key={handViews[1].player.id} handView={handViews[1]} opponentNumber={1} />;
@@ -279,31 +285,36 @@ class Table extends Component {
       opponentRight = <OpponentArea key={handViews[3].player.id} handView={handViews[3]} opponentNumber={3} />;
     }
 
-    let lastPlay = this.state.gameView.lastPlays.length > 0
+    let lastPlay = this.state.gameView.lastPlays.find((play) => play.hand.length > 0);
+    let lastPlayElement = lastPlay !== undefined &&
+        lastPlay.player.id !== this.state.gameView.nextToPlay.id
       ? <PlayerHand
-          cards={this.state.gameView.lastPlays[0].hand}
-          playerName={this.state.gameView.lastPlays[0].player.name}
+          cards={lastPlay.hand}
+          playerName={lastPlay.player.name}
           played={true}
           onSelected={(e) => {} }/>
       : <div className="handContainer" />;
-    // let handHistory = this.state.gameView.lastPlays.length > 0
-    //   ? <HandHistory lastHands={this.state.gameView.lastPlays} />
-    //   : <div />;
+    let handHistory = this.state.gameView.lastPlays.length > 0
+      ? <HandHistory lastPlays={this.state.gameView.lastPlays} />
+      : <div />;
     return (
       <Grid>
         <Row>
           {socks}
-        </Row>
-        <Row>
           <Col xs={2} className="gridCell">{opponentLeft}</Col>
           <Col xs={2} className="gridCell">{opponentOpposite}</Col>
           <Col xs={2} className="gridCell">{opponentRight}</Col>
         </Row>
         <Row>
-          <Col xsOffset={2} className="gridCell">{lastPlay}</Col>
+          <Col xsOffset={2} xs={4} className="gridCell">{lastPlayElement}</Col>
         </Row>
         <Row>
-          <Col className="gridCell">{myHand}</Col>
+          <Col className="myHand">{myHand}</Col>
+        </Row>
+        <Row>
+          <Col xs={6} className="gridCell">
+            {handHistory}
+          </Col>
         </Row>
       </Grid>
     );
