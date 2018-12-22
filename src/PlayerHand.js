@@ -19,7 +19,7 @@ class PlayerHand extends Component {
           {listItems}
         </div>
         <div className={playerClassName}>
-          {this.props.playerName}{this.props.canPlay ? ", it is your turn" : ""}
+          {this.props.playerName} {this.props.played ? "" : "(" + this.props.cards.length + ")"} {this.props.canPlay ? ", it's your turn" : ""}
         </div>
       </div>
     );

@@ -13,12 +13,21 @@ class OpponentArea extends Component {
     return (
       <Grid>
         <Row>
-          <Col><ReactSVG path="../card/back.svg" svgStyle={{ width: 100, height: 140 }}/></Col>
+          <Col>
+            <div className="opponentHandContainer">
+              <div className="opponentCardCount opponentCard">
+                {this.props.handView.cardCount}<br />
+                {this.props.handView.nextToPlay ? "🤔" : ""}
+              </div>
+              <div className="opponentCardCount">
+                <ReactSVG path="../card/back.svg" svgStyle={{ width: 100, height: 140 }}/>
+              </div>
+            </div>
+          </Col>
         </Row>
         <Row>
           <Col>
-              <div className={"cardCount" + activeClassName}>
-                  {playerName} ({this.props.handView.cardCount}) {this.props.handView.nextToPlay ? "🤔" : ""}</div>
+              <div className={"cardCount" + activeClassName}>{playerName}</div>
           </Col>
         </Row>
       </Grid>
