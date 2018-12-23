@@ -4,7 +4,7 @@
       <rect id="DJX" width="164.8" height="260.8" x="-82.4" y="-130.4"/>
    </defs>
    <symbol id="DJ" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMinYMid">
-      <path d="M50 -460L250 -460M150 -460L150 250A100 100 0 0 1 -250 250L-250 220" stroke="red" stroke-width="80" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
+      <path d="M50 -460L250 -460M150 -460L150 250A100 100 0 0 1 -250 250L-250 220" stroke="red" stroke-width="120" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
    </symbol>
    <symbol id="D" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
       <path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"/>

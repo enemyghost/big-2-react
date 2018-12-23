@@ -16,7 +16,10 @@ class OpponentArea extends Component {
           <Col>
             <div className="opponentHandContainer">
               <div className="opponentCardCount opponentCard">
-                {this.props.handView.cardCount}<br />
+                {this.props.handView.cardCount}
+              </div>
+              <div className="opponentCardCount opponentCard">
+                <br /><br />
                 {this.props.handView.nextToPlay ? "🤔" : ""}
               </div>
               <div className="opponentCardCount">

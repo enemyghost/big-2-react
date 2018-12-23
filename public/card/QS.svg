@@ -4,7 +4,7 @@
       <rect id="SQX" width="164.8" height="260.8" x="-82.4" y="-130.4"/>
    </defs>
    <symbol id="SQ" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMinYMid">
-      <path d="M-260 100C40 100 -40 460 260 460M-175 0L-175 -285A175 175 0 0 1 175 -285L175 285A175 175 0 0 1 -175 285Z" stroke="black" stroke-width="80" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
+      <path d="M-260 100C40 100 -40 460 260 460M-175 0L-175 -285A175 175 0 0 1 175 -285L175 285A175 175 0 0 1 -175 285Z" stroke="black" stroke-width="120" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
    </symbol>
    <symbol id="S" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
       <path d="M0 -500C100 -250 355 -100 355 185A150 150 0 0 1 55 185A10 10 0 0 0 35 185C35 385 85 400 130 500L-130 500C-85 400 -35 385 -35 185A10 10 0 0 0 -55 185A150 150 0 0 1 -355 185C-355 -100 -100 -250 0 -500Z" fill="black"/>

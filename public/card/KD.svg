@@ -4,7 +4,7 @@
       <rect id="DKX" width="164.8" height="260.8" x="-82.4" y="-130.4"/>
    </defs>
    <symbol id="DK" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMinYMid">
-      <path d="M-285 -460L-85 -460M-185 -460L-185 460M-285 460L-85 460M85 -460L285 -460M185 -440L-170 155M85 460L285 460M185 440L-10 -70" stroke="red" stroke-width="80" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
+      <path d="M-285 -460L-85 -460M-185 -460L-185 460M-285 460L-85 460M85 -460L285 -460M185 -440L-170 155M85 460L285 460M185 440L-10 -70" stroke="red" stroke-width="120" stroke-linecap="square" stroke-miterlimit="1.5" fill="none"/>
    </symbol>
    <symbol id="D" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
       <path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"/>
