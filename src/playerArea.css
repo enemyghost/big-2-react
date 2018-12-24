@@ -21,14 +21,11 @@
 }
 
 .lastWinnerHand rect {
-  fill: rgba(155, 155, 155, .9);
+  fill: rgba(230, 230, 230, 1);
 }
 
 .cardUnselected {
   margin: 0px -30px 0px 0px;
-}
-
-.cardUnselected rect {
 }
 
 .resultsPanel {
