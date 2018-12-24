@@ -29,7 +29,7 @@ class GameResults extends Component {
             : <div />
         }</h1>
 
-        <PlayerHand cards={hand} onSelected={(card, e) => { }}/>
+        <PlayerHand cards={hand} endOfGame={true} onSelected={(card, e) => { }}/>
       </div>)
     });
     return (<div className="resultsPanel">

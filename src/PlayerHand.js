@@ -13,13 +13,14 @@ class PlayerHand extends Component {
     let playerClassName = this.props.played
       ? "playedHand"
       : "playerHand";
+
     return (
       <div className="myHandRow">
         <div>
           {listItems}
         </div>
         <div className={playerClassName}>
-          {this.props.playerName} {this.props.played ? "" : "(" + this.props.cards.length + ")"} {this.props.canPlay ? ", it's your turn" : ""}
+          {this.props.playerName} {this.props.played || this.props.endOfGame ? "" : "(" + this.props.cards.length + ")"} {this.props.canPlay ? ", it's your turn" : ""}
         </div>
       </div>
     );
