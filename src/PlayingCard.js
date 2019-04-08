@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ReactSVG from 'react-svg';
 import './playerArea.css';
 
-class PlayingCard extends Component {
+class PlayingCard extends PureComponent {
   clickCard(card, e) {
     e.preventDefault();
     this.props.handleClick(card, e);
