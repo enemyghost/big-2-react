@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import constants from './constants';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { BrowserRouter as Router, Link, Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "./login.css";
 
 class Login extends Component {

@@ -86,15 +86,14 @@ class Table extends Component {
       });
   }
 
-  joinGame(e) {
+  joinGame(e, isBot) {
     e.preventDefault();
-
-    if (this.currentPlayerHand(this.state.gameView) === undefined) {
+    if (this.currentPlayerHand(this.state.gameView) === undefined || isBot) {
       axios.create({
           withCredentials: true,
           headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem(constants.TOKEN_LOCALSTORAGE_NAME) }
         })
-        .post(constants.hostname +"/games/" + this.props.gameId + "/players")
+        .post(constants.hostname +"/games/" + this.props.gameId + "/players" + (isBot ? "?isBot=true" : ""))
         .then(response => {
           this.sendUpdate();
           this.updateGameState(response.data);
@@ -231,7 +230,8 @@ class Table extends Component {
       : <div />;
     if (this.state.gameView.gameState === "WAITING_FOR_PLAYERS") {
       return (<div>{socks}<Lobby gameView={this.state.gameView}
-            joinGame={(e) => this.joinGame(e)}
+            joinGame={(e) => this.joinGame(e, false)}
+            addBot={(e) => this.joinGame(e, true)}
             startGame={(e) => this.startGame(e)} /></div>);
     } else if (this.isGameOver(this.state.gameView)) {
       return (<div>
