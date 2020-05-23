@@ -169,8 +169,17 @@
   margin: 20px;
 }
 
+.leaderboardButton {
+  margin: 0px 5px 5px 5px;
+  color: darkblue;
+}
+
+.leaderboardButtonSelected {
+  font-weight: bold
+}
+
 .leaderboardTable {
-  width: 50%;
+  width: 500px;
   margin: 0 auto;
 }
 
